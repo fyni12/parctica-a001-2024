@@ -146,10 +146,13 @@ public class TravelArrayImpl implements Travel {
 		List<Integer> lista = new ArrayList<Integer>(nSeats);
 
 		for (int i = 0; i < nSeats; i++) {
-			if (this.seats[i] != null && this.seats[i].getAdvanceSale()) {
-				lista.add(i + 1);
+			if (this.seats[i] != null){
+				if(this.seats[i].getAdvanceSale()) {
+					lista.add(i + 1);
+				}
 			}
 		}
+
 
 		return lista;
 	}
@@ -164,8 +167,11 @@ public class TravelArrayImpl implements Travel {
 				n++;
 			} else {
 				max = Integer.max(max, n);
+				n=0;
 			}
 		}
+		max = Integer.max(max, n);
+
 		return max;
 	}
 
@@ -201,8 +207,10 @@ public class TravelArrayImpl implements Travel {
 		int number = 0;
 
 		for (Seat s : this.seats) {
-			if (s != null && this.isChildren(s.getHolder().getAge())) {
-				number++;
+			if (s != null){ 
+				if(this.isChildren(s.getHolder().getAge())){
+					number++;
+				}
 			}
 
 		}
@@ -262,7 +270,7 @@ public class TravelArrayImpl implements Travel {
 	public int sellSeatRearPos(String nif, String name, int edad, boolean isAdvanceSale) {
 		int pos = -1;
 
-		for (int i = nSeats - 1; i <= 0; i--) {
+		for (int i = nSeats - 1; i >= 0; i--) {
 			if (this.seats[i] == null) {
 				pos = i + 1;
 				this.seats[i] = new Seat(isAdvanceSale, new Person(nif, name, edad));
