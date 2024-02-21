@@ -12,6 +12,7 @@ public interface Travel {
 	 * @return el numero de asientos que tiene el bus
 	 */
 	public int getNumberOfSeats();
+
 	
 	/**
 	 * Devuelve la fecha de inicio del viaje.
@@ -205,4 +206,7 @@ public interface Travel {
 	 * @return true si la persona ocupa una butaca vendida en venta anticipada, false en caso contrario
 	 */
 	public boolean isAdvanceSale(Person p);
+
+
+	
 }
