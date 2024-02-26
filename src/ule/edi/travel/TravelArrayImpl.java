@@ -109,14 +109,10 @@ public class TravelArrayImpl implements Travel {
 	@Override
 	public Person refundSeat(int pos) {
 
-		// Seat asiento = this.seats[pos - 1];
-		// this.seats[pos - 1] = null;
-		// if (asiento != null) {
-		// 	return asiento.getHolder();
-		// }
 		if (pos>0){
 
-			if(pos<nSeats+1){
+			if(pos<=nSeats){
+
 				if(this.getSeat(pos)!=null){
 					Seat s=null;
 					s=this.getSeat(pos);
@@ -206,13 +202,13 @@ public class TravelArrayImpl implements Travel {
 	public boolean sellSeatPos(int pos, String nif, String name, int edad, boolean isAdvanceSale) {
 
 
+		if (pos > 0 && pos <= this.nSeats && this.seats[pos - 1] == null){
+			if(this.getPosPerson(nif)==-1)  {
 
-
-		if (pos > 0 && pos <= this.nSeats && this.seats[pos - 1] == null && this.getPosPerson(nif)==-1)  {
-
-			this.seats[pos - 1] = new Seat(isAdvanceSale, new Person(nif, name, edad));
-			return true;
-		}
+				this.seats[pos - 1] = new Seat(isAdvanceSale, new Person(nif, name, edad));
+				return true;
+			}
+		}	
 		return false;
 	}
 
@@ -238,10 +234,12 @@ public class TravelArrayImpl implements Travel {
 		int number = 0;
 
 		for (Seat s : this.seats) {
-			if (s != null && this.isAdult(s.getHolder().getAge())) {
-				number++;
-			}
+			if (s != null){
+				if( this.isAdult(s.getHolder().getAge())) {
+					number++;
+				}
 
+			}
 		}
 
 		return number;
@@ -273,13 +271,12 @@ public class TravelArrayImpl implements Travel {
 			return pos;
 		}
 
-		for (int i = 0; i < nSeats; i++) {
-			if (this.seats[i] == null ) {
-				pos = i + 1;
-				this.seats[i] = new Seat(isAdvanceSale, new Person(nif, name, edad));
-				break;
-			}
+		
+		if(!this.getAvailableSeatsList().isEmpty()){
+			pos= this.getAvailableSeatsList().get(0);
+			this.seats[pos-1]=new Seat(isAdvanceSale, new Person(nif, name, edad));
 		}
+
 
 		return pos;
 	}
@@ -293,14 +290,11 @@ public class TravelArrayImpl implements Travel {
 			return pos;
 		}
 
-
-		for (int i = nSeats - 1; i >= 0; i--) {
-			if (this.seats[i] == null) {
-				pos = i + 1;
-				this.seats[i] = new Seat(isAdvanceSale, new Person(nif, name, edad));
-				break;
-			}
+		if(!this.getAvailableSeatsList().isEmpty()){
+			pos= this.getAvailableSeatsList().get(this.getAvailableSeatsList().size()-1);
+			this.seats[pos-1]=new Seat(isAdvanceSale, new Person(nif, name, edad));
 		}
+		
 
 		return pos;
 
@@ -320,4 +314,8 @@ public class TravelArrayImpl implements Travel {
 	public double getPrice() {
 		return this.price;
 	}
+
+
+
+	
 }

@@ -1,6 +1,7 @@
 package ule.edi.travel;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -191,12 +192,20 @@ public class TravelArrayImplTests {
 
 	@Test
 	public void refundSeatNull(){
+
+		
 		assertNull(e.refundSeat(1));
 		assertNull(e.refundSeat(-1));
-		//TODO COMPROBAR PARA COBERTURA
+		assertNull(busDeUno.refundSeat(20));
+
+
+		busDeUno.sellSeatFrontPos("null", "null", 44, false);
+		assertTrue(busDeUno.refundSeat(1).equals(new Person("null", "null", 44)));
+
+		
 	}
 
-	@Test
+	@Test	
 	public void availeableSeats(){
 		assertEquals("[1]", this.busDeUno.getAvailableSeatsList().toString());
 	}
@@ -206,5 +215,51 @@ public class TravelArrayImplTests {
 		assertEquals("[]", busDeUno.getAdvanceSaleSeatsList().toString());
 		busDeUno.sellSeatFrontPos("hola", "paco", 1, true);
 		assertEquals("[1]", busDeUno.getAdvanceSaleSeatsList().toString());
+	}
+
+	@Test
+	public void getMaxNumberConsecutiveSeatsTest(){
+		assertEquals(110, e.getMaxNumberConsecutiveSeats());
+		e.sellSeatPos(50, "null", "null", 0, false);
+		assertEquals(60, e.getMaxNumberConsecutiveSeats());
+
+	}
+
+	@Test 
+	public void sellSeatPos(){
+		
+		Assert.assertTrue(e.sellSeatPos(1, "null", "null", 0, false));
+		Assert.assertFalse(e.sellSeatPos(2, "null", "null", 0, false));
+	}
+
+	@Test
+	public void getNumberOfChildren(){
+		e.sellSeatFrontPos("null", "null", 3, false);
+		e.sellSeatFrontPos("3", "null", 55, false);
+		assertEquals(1, e.getNumberOfChildren());
+	}
+
+	@Test
+	public void getNumberOfAdults(){
+		e.sellSeatFrontPos("null", "null", 3, false);
+		e.sellSeatFrontPos("3", "null", 55, false);
+		assertEquals(1, e.getNumberOfAdults());
+	}
+
+	@Test
+	public void sellSeatFrontPos(){
+		
+		busDeUno.sellSeatFrontPos("null", "null", 0, false);
+		assertEquals(-1, busDeUno.sellSeatFrontPos("null", "null", 0, false));
+		assertEquals(-1, busDeUno.sellSeatFrontPos("nul", "null", 0, false));
+	}
+
+
+	@Test
+	public void sellSeatRearPos(){
+		
+		busDeUno.sellSeatRearPos("null", "null", 0, false);
+		assertEquals(-1, busDeUno.sellSeatRearPos("null", "null", 0, false));
+		assertEquals(-1, busDeUno.sellSeatRearPos("nul", "null", 0, false));
 	}
 }
