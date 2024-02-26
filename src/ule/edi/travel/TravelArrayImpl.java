@@ -6,6 +6,7 @@ import java.util.List;
 
 import ule.edi.model.*;
 
+
 public class TravelArrayImpl implements Travel {
 
 	private static final Double DEFAULT_PRICE = 100.0;
@@ -97,8 +98,13 @@ public class TravelArrayImpl implements Travel {
 
 	@Override
 	public Seat getSeat(int pos) {
+		if(pos<=0 || pos>nSeats)
+		{
+			return null;
+		}
 		return this.seats[pos - 1];
 	}
+	
 
 	@Override
 	public Person refundSeat(int pos) {
@@ -108,12 +114,17 @@ public class TravelArrayImpl implements Travel {
 		// if (asiento != null) {
 		// 	return asiento.getHolder();
 		// }
-		if (pos>0 && pos<nSeats+1){
-			Seat s=null;
-			s=this.getSeat(pos);
-			this.seats[pos-1]=null;
+		if (pos>0){
 
-			return s.getHolder();
+			if(pos<nSeats+1){
+				if(this.getSeat(pos)!=null){
+					Seat s=null;
+					s=this.getSeat(pos);
+					this.seats[pos-1]=null;
+
+					return s.getHolder();
+				}
+			}
 		}
 		return null;
 
@@ -194,7 +205,10 @@ public class TravelArrayImpl implements Travel {
 	@Override
 	public boolean sellSeatPos(int pos, String nif, String name, int edad, boolean isAdvanceSale) {
 
-		if (pos > 0 && pos <= this.nSeats && this.seats[pos - 1] == null) {
+
+
+
+		if (pos > 0 && pos <= this.nSeats && this.seats[pos - 1] == null && this.getPosPerson(nif)==-1)  {
 
 			this.seats[pos - 1] = new Seat(isAdvanceSale, new Person(nif, name, edad));
 			return true;
@@ -255,8 +269,12 @@ public class TravelArrayImpl implements Travel {
 	public int sellSeatFrontPos(String nif, String name, int edad, boolean isAdvanceSale) {
 		int pos = -1;
 
+		if(this.getPosPerson(nif)!=-1){
+			return pos;
+		}
+
 		for (int i = 0; i < nSeats; i++) {
-			if (this.seats[i] == null) {
+			if (this.seats[i] == null ) {
 				pos = i + 1;
 				this.seats[i] = new Seat(isAdvanceSale, new Person(nif, name, edad));
 				break;
@@ -269,6 +287,12 @@ public class TravelArrayImpl implements Travel {
 	@Override
 	public int sellSeatRearPos(String nif, String name, int edad, boolean isAdvanceSale) {
 		int pos = -1;
+
+		if( this.getPosPerson(nif)!=-1)
+		{
+			return pos;
+		}
+
 
 		for (int i = nSeats - 1; i >= 0; i--) {
 			if (this.seats[i] == null) {

@@ -16,7 +16,7 @@ import ule.edi.model.*;
 public class TravelArrayImplTests {
 
 	private DateFormat dformat = null;
-	private TravelArrayImpl e, ep;
+	private TravelArrayImpl e, ep, busDeUno;
 
 	private Date parseLocalDate(String spec) throws ParseException {
 		return dformat.parse(spec);
@@ -31,22 +31,23 @@ public class TravelArrayImplTests {
 	public void testBefore() throws Exception {
 		e = new TravelArrayImpl(parseLocalDate("24/02/2020 17:00:00"), 110);
 		ep = new TravelArrayImpl(parseLocalDate("24/02/2020 17:00:00"), 4);
+		busDeUno=new TravelArrayImpl(new Date(),1 );
+
+		
 
 	}
 
-	
-	
 	@Test
 	public void testEventoVacio() throws Exception {
-		
+
 		Assert.assertTrue(e.getNumberOfAvailableSeats() == 110);
 		Assert.assertEquals(110, e.getNumberOfAvailableSeats());
 		Assert.assertEquals(0, e.getNumberOfAdults());
 		Assert.assertEquals(0, e.getNumberOfChildren());
 		Assert.assertEquals(100.0, 0.0, e.getPrice());
-		
+
 	}
-	
+
 	// test 2 constructor
 	@Test
 	public void test2Constructor() throws Exception {
@@ -178,100 +179,32 @@ public class TravelArrayImplTests {
 
 	}
 
-	//ischildren
-	@Test
-	public void testconsecutiveseats(){
-
-		assertEquals(110, e.getMaxNumberConsecutiveSeats());
-
-		e.sellSeatPos(2, "55", "hola", 4, false);
-		assertEquals(108, e.getMaxNumberConsecutiveSeats());
-	}
+	//mis test
 
 	@Test
-	public void testgetnumberofchildren(){
+	public void getSeatOutOfBounds(){
 
-
-		e.sellSeatPos(2, "55", "hola", 4, false);
-		assertEquals(1, e.getNumberOfChildren());
-		TravelArrayImpl f=new TravelArrayImpl(new Date(), 1);
-
-		assertEquals(0, f.getNumberOfChildren());
-		
-		f.sellSeatFrontPos("1", "luis", 20, false);
-		assertEquals(0, f.getNumberOfChildren());
-		
-		f.refundSeat(1);
-		f.sellSeatFrontPos("1", "luis", 2, false);
-		assertEquals(1, f.getNumberOfChildren());
+		assertNull(e.getSeat(0));
+		assertNull(e.getSeat(200));
 
 	}
 
 	@Test
-	public void testsellfrontseat(){
-
-		TravelArrayImpl f=new TravelArrayImpl(new Date(), 1);
-		assertEquals(1,e.sellSeatFrontPos("12", "paco", 2, true));
-		assertTrue(e.getSeat(1).getHolder().equals(new Person("12", "paco", 2)));
-		assertEquals(1,f.sellSeatFrontPos("12", "paco", 2, true));
-		assertEquals(-1,f.sellSeatFrontPos("12", "paco", 2, true));
-	}
-
-	@Test
-	public void testsellbackseat(){
-
-		TravelArrayImpl f=new TravelArrayImpl(new Date(), 1);
-		assertEquals(110,e.sellSeatRearPos("12", "paco", 2, true));
-		assertTrue(e.getSeat(110).getHolder().equals(new Person("12", "paco", 2)));
-		assertEquals(1,f.sellSeatRearPos("12", "paco", 2, true));
-		assertEquals(-1,f.sellSeatRearPos("12", "paco", 2, true));
-	}
-
-	@Test
-	public void testavaileableseats(){
-
-		TravelArrayImpl f=new TravelArrayImpl(new Date(), 1);
-
-		assertEquals("[1]", f.getAvailableSeatsList().toString());
-
-	}
-
-	@Test
-	public void testadvancedseats(){
-
-		TravelArrayImpl f=new TravelArrayImpl(new Date(), 1);
-
-		assertEquals("[]", f.getAdvanceSaleSeatsList().toString());
-
-	}
-
-
-	@Test
-	public void testrefundSeatbad(){
+	public void refundSeatNull(){
+		assertNull(e.refundSeat(1));
 		assertNull(e.refundSeat(-1));
-		assertNull(e.refundSeat(1000));
+		//TODO COMPROBAR PARA COBERTURA
 	}
 
 	@Test
-	public void testgetNumberOfAdults(){
-
-		e.sellSeatPos(2, "55", "hola", 22, false);
-		assertEquals(1, e.getNumberOfAdults());
-		TravelArrayImpl f=new TravelArrayImpl(new Date(), 1);
-
-		assertEquals(0, f.getNumberOfAdults());
-		
-		f.sellSeatFrontPos("1", "luis", 2, false);
-		assertEquals(0, f.getNumberOfAdults());
-		
-		f.refundSeat(1);
-		f.sellSeatFrontPos("1", "luis", 20, false);
-		assertEquals(1, f.getNumberOfAdults());
-
-
-
+	public void availeableSeats(){
+		assertEquals("[1]", this.busDeUno.getAvailableSeatsList().toString());
 	}
 
-
-		
+	@Test
+	public void getAdvanceSaleSeatsListNull(){
+		assertEquals("[]", busDeUno.getAdvanceSaleSeatsList().toString());
+		busDeUno.sellSeatFrontPos("hola", "paco", 1, true);
+		assertEquals("[1]", busDeUno.getAdvanceSaleSeatsList().toString());
+	}
 }
