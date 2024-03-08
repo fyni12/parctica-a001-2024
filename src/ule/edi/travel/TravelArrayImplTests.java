@@ -262,4 +262,10 @@ public class TravelArrayImplTests {
 		assertEquals(-1, busDeUno.sellSeatRearPos("null", "null", 0, false));
 		assertEquals(-1, busDeUno.sellSeatRearPos("nul", "null", 0, false));
 	}
+
+
+	@Test
+	public void TestPersonaNoMismoDato(){
+		assertFalse(new Person("null", "null", 0).equals(1));
+	}
 }
